@@ -48,7 +48,14 @@
             {
             	this.innerHTML=renderStar?'只看收藏':'查看全部';
             	renderStar=renderStar?false:true;
-            	render_note_list();
+            	var lists=note_list.length;
+            	for(var i=0;i<lists;i++)
+            	{
+            		if(!note_list[i].star)
+            		{
+            			$('.note-item').eq(lists-i-1).toggle();
+            		}
+            	}
             });
 
             //控制遮罩和新建笔记页面
@@ -109,42 +116,43 @@
         }
 
 		//根据文章数组数据刷新文章
-		// function render_note_list(isStar)
-		// {
-		// 	$note_list_area.html('');
-		// 	star=[];
-		// 	for(var i=0;i<note_list.length;i++)
-		// 	{
-		// 		if(note_list[i].star)
-		// 		{
-		// 			star.push(note_list[i]);
-		// 		}
-		// 		var item=create_new_note(note_list[i],i);
-		// 		item.prependTo('.note-list');
-		// 	}
-		// 	listen_all();
-		// }
-
 		function render_note_list()
 		{
+			if(renderStar)return;
 			$note_list_area.html('');
 			star=[];
-			var tmp=[];
 			for(var i=0;i<note_list.length;i++)
 			{
 				if(note_list[i].star)
 				{
 					star.push(note_list[i]);
 				}
-			};
-			tmp=renderStar?star:note_list;
-			for(var i=0;i<tmp.length;i++)
-			{
-				var item=create_new_note(tmp[i],i);
+				var item=create_new_note(note_list[i],i);
 				item.prependTo('.note-list');
-			};
+			}
 			listen_all();
 		}
+
+		// function render_note_list()
+		// {
+		// 	$note_list_area.html('');
+		// 	star=[];
+		// 	var tmp=[];
+		// 	for(var i=0;i<note_list.length;i++)
+		// 	{
+		// 		if(note_list[i].star)
+		// 		{
+		// 			star.push(note_list[i]);
+		// 		}
+		// 	};
+		// 	tmp=renderStar?star:note_list;
+		// 	for(var i=0;i<tmp.length;i++)
+		// 	{
+		// 		var item=create_new_note(tmp[i],i);
+		// 		item.prependTo('.note-list');
+		// 	};
+		// 	listen_all();
+		// }
 
 		//事件监听集中
 		function listen_all()
