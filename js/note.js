@@ -7,6 +7,7 @@
 		    note_items,                       //包含页面上的文章列表
 		    star=[],                          //星标数组,添加收藏
 		    innerScroll,                      //实现textarea输出的内容实现换行的正则。
+		    renderStar=false,                 //判断是否按收藏刷新页面
 		    oHeight,
 		    oDate,
 		    re=/\n+/g,
@@ -21,7 +22,7 @@
 		    $star_button,
 		    $mask=$('.mask');                  //遮罩
         
-        //初始化页面
+        //初始化页面。
 		init();
 
 		//给新建页添加拖拽
@@ -41,8 +42,13 @@
             	$(this).stop().animate({'width':200}, 400);
             }, function() {
             	$(this).stop().animate({'width':60}, 400);
-            }).find('span').on('click', function(event) {
+            }).find('.ball-add').on('click', function(event) {
             	toggle_add_note();
+            }).end().find('.ball-star').on('click',function()
+            {
+            	this.innerHTML=renderStar?'只看收藏':'查看全部';
+            	renderStar=renderStar?false:true;
+            	render_note_list();
             });
 
             //控制遮罩和新建笔记页面
@@ -72,7 +78,7 @@
 					toggle_add_note();
 					$input.val('');
 					$textarea.val('');
-					/*完成一个=动画添加效果*/
+					/*完成一个动画添加效果*/
 					$new_note=$('.note-item:eq(0)');
 					oHeight=$new_note[0].offsetHeight;
 					$new_note.css({"height":0,"opacity":0})
@@ -99,24 +105,44 @@
         function update_note_list(noRefreash)
         {
         	store.set('note_list',note_list);
-        	if(!noRefreash)
-        	render_note_list();
+        	noRefreash || render_note_list();
         }
 
 		//根据文章数组数据刷新文章
-		function render_note_list(isStar)
+		// function render_note_list(isStar)
+		// {
+		// 	$note_list_area.html('');
+		// 	star=[];
+		// 	for(var i=0;i<note_list.length;i++)
+		// 	{
+		// 		if(note_list[i].star)
+		// 		{
+		// 			star.push(note_list[i]);
+		// 		}
+		// 		var item=create_new_note(note_list[i],i);
+		// 		item.prependTo('.note-list');
+		// 	}
+		// 	listen_all();
+		// }
+
+		function render_note_list()
 		{
 			$note_list_area.html('');
 			star=[];
+			var tmp=[];
 			for(var i=0;i<note_list.length;i++)
 			{
 				if(note_list[i].star)
 				{
 					star.push(note_list[i]);
 				}
-				var item=create_new_note(note_list[i],i);
+			};
+			tmp=renderStar?star:note_list;
+			for(var i=0;i<tmp.length;i++)
+			{
+				var item=create_new_note(tmp[i],i);
 				item.prependTo('.note-list');
-			}
+			};
 			listen_all();
 		}
 
