@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://cdn.bootcss.com/normalize/5.0.0/normalize.css">
+<link rel="stylesheet" href="style/mynote.css" type="text/css">
+<script src="js/jQuery/jquery-3.1.1.min.js"></script>
+<script src="http://cdn.bootcss.com/store.js/1.3.20/store.min.js"></script>
+<script src="js/drag.js"></script>
+<script src="js/drag-scroll.js"></script>
+</head>
+<body>
+	<!-- 全局 -->
+	<div class="note-area">
+		<h1 style="font-size:3em">简易笔记</h1>
+		<!-- 新建笔记 -->
+		<div class="add-note">
+			<div class="add-move"></div>
+			<div class="note-delete">
+				<img src="img/delete-2.png" alt="delete">
+			</div>
+		<form>
+			<div class="u-avatar">
+				<img src="img/head.jpg" alt="head">
+				<span>猩猩队长</span>
+			</div>
+			<div class="new-title">
+				<input type="text" placeholder="请输入标题">
+			</div>
+			<div class="new-content">
+				<textarea name="new-content" placeholder="请输入正文"></textarea>
+			</div>
+			<button type="submit">提 交</button>
+		</form>
+	    </div>
+		<!-- 新建笔记结束 -->
+		<div class="note-list">
+		<!-- 此部分由js生成 -->
+		<!--<div class="note-item">
+			 <div class="star">
+				<img src="img/star.png" alt="star">
+			</div>
+			<div class="avatar">
+				<img src="img/head.jpg" alt="head">潘猩霸
+			</div>
+			<div class="note-content">
+			    <span class="note-content-title">这个是标题</span>
+			    <span class="content-preview">这个是正文</span>
+			</div>
+			<div class="time">
+				3月10日 14时32分
+			</div>
+			<div class="note-delete">
+				<img src="img/delete.png" alt="delete">
+			</div>
+			<div class="note-edit">
+				<img src="img/edit-2.png" alt="edit">
+		    </div> 
+	    </div>-->
+	    </div>
+	    <div class="note-detail">
+	    	<!-- 此部分由js生成 -->
+	    	<!-- <form>
+	    	<div class="note-delete">
+				<img src="img/delete.png" alt="delete">
+			</div>
+			<div class="note-edit">
+				<img src="img/change.png" alt="delete">
+			</div>
+	    	<header class="detail-title">这个是标题</header>
+	    	<div class="title-edit"><input type="text" value="这个是标题"></div>
+	    	<div class="detail-time">1970年3月11日</div>
+	    	<div class="detail-content">
+	    		<div class="inner-content">这个是正文</div>
+	    		<div class="scroll"><div class="inner-scroll" id="test"></div></div>
+	    	</div>
+
+	    	<div class="content-edit"><textarea value="这个是正文"></textarea></div>
+	    	<button type="submit">提交</button>
+	    	<form> -->
+	    </div>
+        <!-- 遮罩 -->
+        <div class="mask"></div>
+        <!-- 遮罩结束 -->
+        <!-- 任务球 -->
+        <div class="ball">
+        	<img src="img/edit.png" alt="edit"><span>新建笔记</span>
+        </div>
+        <!-- 任务球结束 -->
+	</div>
+	<!-- 全局结束 -->
+<script src="js/note.js"></script>
+</body>
+</html>
