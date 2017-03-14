@@ -103,16 +103,21 @@ input
 	background: #fff;
 	box-shadow:1px 1px 5px 3px #FEA8B0;
 }
+
+button.primary,
 button[type=submit]{
-	position: absolute;
-	bottom: 85px;
-	right: 20px;
 	padding: 10px 46px;
-	font-size: 25px;
 	font-weight: bold;
 	background: #FE99AF;
 	cursor: pointer;
 }
+button[type=submit]{
+	position: absolute;
+	bottom: 85px;
+	right: 20px;
+	font-size: 25px;
+}
+button.primary:hover,
 button[type=submit]:hover{
 	color: #fff;
 	background: #FB6073;

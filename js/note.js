@@ -6,8 +6,13 @@
 		    note_item,                        //包含笔记信息的对象
 		    note_items,                       //包含页面上的文章列表
 		    star=[],                          //星标数组添加收藏
-		    $ball=$('.ball'),
 		    oDate,
+		    innerScroll,
+		    oHeight,
+		    re=/\n+/g,                         //实现textarea输出的内容实现换行。
+		    $body=$('body'),
+		    $window=$(window),
+		    $ball=$('.ball'),
 		    $add_note=$('.add-note'),
 		    add_move=$('.add-move')[0],
 		    $note_list_area=$('.note-list'),
@@ -16,13 +21,144 @@
 		    $delete_button,
 		    $detail_button,
 		    $star_button,
-		    innerScroll,
-		    oHeight,
-		    re=/\n+/g,                         //实现textarea输出的内容实现换行。
 		    $mask=$('.mask'),
 		    $detail_menu=$('.level1');
 
 		init();
+
+        //自定义的警告框(考虑到复用,连同遮罩不直接添加在html中)
+		function pop(arg)
+		{
+			if(!arg)
+			{
+				console.error('pop title is required')
+			};
+
+			var conf={},
+			    dfd,
+			    $box,
+			    $mask,
+			    timer,
+			    $title,
+			    $confirm,
+			    confirmed,       //用来储存点击确定按钮返回的变量
+			    $cancel,
+			    $content;
+
+			if(typeof arg !== 'object')
+			{
+				conf.title=arg;
+			}
+			else
+			{
+				$.extend(conf, arg);
+			};
+
+			dfd=$.Deferred();
+
+			$box=$('<div>'+
+				'<div style="margin:25px 0 0 10px;font-size:23px;" class="pop-title">' + conf.title + '</div>'+
+				'<div class="pop-content">'+
+				'<div>'+
+				'<button style="position:absolute;left:40px;bottom:32px;padding:10px 25px;" class="primary confirm">确定</button>'+
+				'<button style="position:absolute;right:40px;bottom:32px;padding:10px 25px;" class="primary cancel">取消</button>'+
+				'</div>'+
+				'</div>'+
+				'</div>');
+			$mask=$('<div></div>');
+			$box.css({
+				position:'fixed',
+				padding:20,
+				width:300,
+				height:180,
+				background:'white',
+				borderRadius:5,
+				textAlign:'center',
+				fontSize: 18,
+				boxShadow:'1px 1px 3px 2px #AFA6A6',
+				zIndex:1001
+			});
+			$mask.css({
+				position:'fixed',
+				top:0,
+				right:0,
+				bottom:0,
+				background:'rgba(0,0,0,.3)',
+				left:0
+			});
+
+			$content=$box.find('.pop-content');
+
+			$confirm=$content.find('button.confirm');
+			$cancel=$content.find('button.cancel');
+
+			$confirm.on('click',function()
+			{
+				confirmed = true;
+			});
+
+			$cancel.on('click',function()
+			{
+				confirmed = false;
+			});
+
+			$mask.on('click',function()
+			{
+				$cancel.trigger('click');
+			})
+
+			timer=setInterval(function()
+			{
+				if(confirmed !==undefined)
+				{
+					dfd.resolve(confirmed);
+					clearInterval(timer);
+					dismiss_pop();
+				}
+			},50)
+
+			function dismiss_pop()
+			{
+				$mask.remove();
+			    $box.remove();
+			}
+
+			//让弹出框在窗口大小变化的时候自适应
+			$window.on('resize',function()
+			{
+				adjust_box_position($box);
+			}).trigger('resize');
+
+			$mask.appendTo($body);
+			$box.appendTo($body);
+
+			return dfd.promise();
+		}
+
+        //屏幕自适应函数
+		function adjust_box_position($box)
+			{
+				var window_width=$window.width(),
+				    window_height=$window.height(),
+				    box_width=$box.width(),
+				    box_height=$box.height(),
+				    pos_x,
+				    pos_y;
+
+				    pos_x=(window_width - box_width)/2;
+				    pos_y=(window_height - box_height)/2 - 20;
+
+				    $box.css({
+				    	left: pos_x,
+				    	top:pos_y
+				    });
+			};
+
+
+
+
+
+
 		//给新建页添加拖拽
 		new Drag($add_note[0],add_move,true,true);
 		function init()
@@ -44,7 +180,7 @@
             	toggle_add_note();
             }).end().find('.ball-star').on('click',function()
             {
-            	//
+            	console.log('做崩了目前推到重来');
             });
 
             //控制遮罩和新建笔记页面
@@ -65,7 +201,11 @@
 		    var $textarea=$this.find('textarea');
 			note_item.title=$input.val();
 			note_item.content=$textarea.val();
-			if(note_item.title=="" || note_item.content=="")return;
+			if(note_item.title=="" || note_item.content=="")
+			{
+				pop('请完整输入正文和标题');
+				return;
+			}
 			note_item.time=(oDate.getMonth()+1)+"月"+oDate.getDate()+"日 "
 			+oDate.getHours()+"时"+oDate.getMinutes()+"分";
 			note_item.star=false;
@@ -169,10 +309,16 @@
 			{
 				var $this=$(this);
 				var $index=$(this).parent().data('index');
-				$this.parent().animate({"opacity":0}, 300).animate({'height':0}, 72,function()
+				pop('确定要删除吗？').then(function(result)
 				{
-					delete_note_list($index);
-				})
+					if(result)
+						{
+							$this.parent().animate({"opacity":0}, 300).animate({'height':0}, 72,function()
+									        {
+									        	delete_note_list($index);
+									        })
+						}
+				});
 			})
 		}
 
@@ -261,6 +407,7 @@
 				change_note_list(index,data);
 			});
 
+			//右击菜单
 			$note_detail.on('contextmenu',function(e)
 	            {
 	            	e.preventDefault();
@@ -344,25 +491,4 @@
 			note_list.splice(index,1);
 			update_note_list();
 		}
-
-
-    
-/*	$(document).on('contextmenu',function(e)
-	{
-		e.preventDefault();
-		$detail_menu.css({'left':e.pageX+5,'top':e.pageY+5}).show();
-	}).on('click',function()
-	{
-		$detail_menu.hide();
-	})
-	$detail_menu.on('click', function(e) {
-		e.stopPropagation();
-	}).children('li').hover(function()
-	{
-		$(this).find('.level2').show();
-	},function()
-	{
-		$(this).find('.level2').hide();
-	});*/
-
 	})();
