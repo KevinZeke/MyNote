@@ -1,15 +1,17 @@
-﻿function Drag(tag,downArea,X,Y,limitX,limitY)
+﻿function Drag(tag,downArea,X,Y)
 {
 	var _this=this;
 	this.obj=tag;
 	this.disX=0;
 	this.disY=0;
+
 	downArea.onmousedown=function(ev)
-	{
-		_this.fnDown(ev,X,Y,limitX,limitY);
-	}
+	    {
+		    _this.fnDown(ev,X,Y);
+	    }
+
 }
-Drag.prototype.fnDown=function(ev,X,Y,limitX,limitY)
+Drag.prototype.fnDown=function(ev,X,Y)
 {
 	var _this=this;
 	var oEvent=ev||window.event;
@@ -18,7 +20,7 @@ Drag.prototype.fnDown=function(ev,X,Y,limitX,limitY)
 
 	document.onmousemove=function(e)
 	{
-		_this.fnMove(e,X,Y,limitX,limitY);
+		_this.fnMove(e,X,Y);
 		return false;
 	}
 
@@ -27,7 +29,7 @@ Drag.prototype.fnDown=function(ev,X,Y,limitX,limitY)
 		_this.fnUp();
 	}
 }
-Drag.prototype.fnMove=function (e,X,Y,limitX,limitY)
+Drag.prototype.fnMove=function (e,X,Y)
 {
 	var oEvent=e||window.event;
 	var iL=oEvent.clientX - this.disX;
@@ -36,8 +38,10 @@ Drag.prototype.fnMove=function (e,X,Y,limitX,limitY)
 	var oHeight=document.documentElement.clientHeight || document.body.clientHeight;
 	var objHeight = this.obj.offsetHeight;
 	var objWidth = this.obj.offsetWidth;
-	limitX && (iL=iL<0?0:iL,iL=iL>(oWidth - objWidth)?(oWidth - objWidth):iL);
-	limitY && (iT=iT<0?0:iT,iT=iT>(oHeight - objHeight)?(oHeight-objHeight):iT);
+	iL=iL<0?0:iL;
+	iL=iL>(oWidth - objWidth)?(oWidth - objWidth):iL;
+	iT=iT<0?0:iT;
+	iT=iT>(oHeight - objHeight)?(oHeight-objHeight):iT;
 	Y && (this.obj.style.top=iT + 'px');
 	X && (this.obj.style.left=iL + 'px');
 }

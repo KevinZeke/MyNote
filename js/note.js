@@ -1,17 +1,13 @@
-;(function()
+;(function()//注意前面的分号来结束你之前引入的库
 	{
 		'use strict';
 
 		var note_list=[],                     //用来存放每一篇笔记对象的数组
 		    note_item,                        //包含笔记信息的对象
 		    note_items,                       //包含页面上的文章列表
-		    star=[],                          //星标数组,添加收藏
-		    innerScroll,                      //实现textarea输出的内容实现换行的正则。
-		    renderStar=false,                 //判断是否按收藏刷新页面
-		    oHeight,
-		    oDate,
-		    re=/\n+/g,
+		    star=[],                          //星标数组添加收藏
 		    $ball=$('.ball'),
+		    oDate,
 		    $add_note=$('.add-note'),
 		    add_move=$('.add-move')[0],
 		    $note_list_area=$('.note-list'),
@@ -20,11 +16,13 @@
 		    $delete_button,
 		    $detail_button,
 		    $star_button,
-		    $mask=$('.mask');                  //遮罩
-        
-        //初始化页面。
-		init();
+		    innerScroll,
+		    oHeight,
+		    re=/\n+/g,                         //实现textarea输出的内容实现换行。
+		    $mask=$('.mask'),
+		    $detail_menu=$('.level1');
 
+		init();
 		//给新建页添加拖拽
 		new Drag($add_note[0],add_move,true,true);
 		function init()
@@ -34,9 +32,9 @@
 			if(note_list.length)
 			render_note_list();
 		}
-
             /*控制任务球展开,以及拖动*/
             new Drag($ball[0],$ball[0],true,true);
+            new Drag($ball[1],$ball[1],true,true);
 
             $ball.hover(function() {
             	$(this).stop().animate({'width':200}, 400);
@@ -46,16 +44,7 @@
             	toggle_add_note();
             }).end().find('.ball-star').on('click',function()
             {
-            	this.innerHTML=renderStar?'只看收藏':'查看全部';
-            	renderStar=renderStar?false:true;
-            	var lists=note_list.length;
-            	for(var i=0;i<lists;i++)
-            	{
-            		if(!note_list[i].star)
-            		{
-            			$('.note-item').eq(lists-i-1).toggle();
-            		}
-            	}
+            	//
             });
 
             //控制遮罩和新建笔记页面
@@ -76,6 +65,7 @@
 		    var $textarea=$this.find('textarea');
 			note_item.title=$input.val();
 			note_item.content=$textarea.val();
+			if(note_item.title=="" || note_item.content=="")return;
 			note_item.time=(oDate.getMonth()+1)+"月"+oDate.getDate()+"日 "
 			+oDate.getHours()+"时"+oDate.getMinutes()+"分";
 			note_item.star=false;
@@ -85,7 +75,8 @@
 					toggle_add_note();
 					$input.val('');
 					$textarea.val('');
-					/*完成一个动画添加效果*/
+
+					/*完成一个=动画添加效果*/
 					$new_note=$('.note-item:eq(0)');
 					oHeight=$new_note[0].offsetHeight;
 					$new_note.css({"height":0,"opacity":0})
@@ -97,28 +88,25 @@
 			toggle_add_note();
 		});
 
-		//更新数组
+
+		//添加更新数组
         function add_note_list(data)
         {
         	note_list.push(data);
-        	update_note_list(true);
-        	var item=create_new_note(data,(note_list.length-1));
-        	item.prependTo('.note-list');
-        	listen_all();
+        	update_note_list();
         	return true;
         }
 
         //上传新数组并且刷新页面
-        function update_note_list(noRefreash)
+        function update_note_list()
         {
         	store.set('note_list',note_list);
-        	noRefreash || render_note_list();
+        	render_note_list();
         }
 
 		//根据文章数组数据刷新文章
-		function render_note_list()
+		function render_note_list(isStar)
 		{
-			if(renderStar)return;
 			$note_list_area.html('');
 			star=[];
 			for(var i=0;i<note_list.length;i++)
@@ -133,28 +121,6 @@
 			listen_all();
 		}
 
-		// function render_note_list()
-		// {
-		// 	$note_list_area.html('');
-		// 	star=[];
-		// 	var tmp=[];
-		// 	for(var i=0;i<note_list.length;i++)
-		// 	{
-		// 		if(note_list[i].star)
-		// 		{
-		// 			star.push(note_list[i]);
-		// 		}
-		// 	};
-		// 	tmp=renderStar?star:note_list;
-		// 	for(var i=0;i<tmp.length;i++)
-		// 	{
-		// 		var item=create_new_note(tmp[i],i);
-		// 		item.prependTo('.note-list');
-		// 	};
-		// 	listen_all();
-		// }
-
-		//事件监听集中
 		function listen_all()
 		{
 			note_items=$('.note-item');
@@ -168,7 +134,7 @@
 			{
 				var index=note_list.length-$(this).data('index')-1;
 				$detail_button.eq(index).trigger('click');
-			});
+			})
 		}
 
 		//创建一个新文章页
@@ -196,7 +162,7 @@
 		  return $(Note);
 		}
 
-        //删除按钮的事件
+        //监听删除按钮事件
 		function listen_delete()
 		{
 			$delete_button.on('click',function()
@@ -206,22 +172,11 @@
 				$this.parent().animate({"opacity":0}, 300).animate({'height':0}, 72,function()
 				{
 					delete_note_list($index);
-					$(this).remove();
-					listen_all();
 				})
 			})
 		}
 
-		//删除数组元素并更新页面
-		function delete_note_list(index)
-		{
-			if(index===undefined || !note_list[index])
-				return;
-			note_list.splice(index,1);
-			update_note_list(true);
-		}
-
-		//详情按钮
+		//监听详情按钮
 		function listen_detail()
 		{
 			$detail_button.on('click',function()
@@ -232,7 +187,7 @@
 			})
 		}
 
-		//收藏星标事件
+		//监听收藏星标
 		function listen_star()
 		{
 			$star_button.on('click',function()
@@ -243,14 +198,18 @@
 				change_note_list($index,data);
 			})
 		}
-
 		//判断滚动条是否该出现
 		function scroll_judgement()
 		{
 			if($('.inner-content')[0].offsetHeight<$(".detail-content")[0].offsetHeight)
-	    		$(".scroll").hide();
+	    		{
+	    			$(".scroll").hide();
+	    		}
+	    	else
+	    	    {
+	    		    $(".scroll").show();
+	    	    }
 		}
-
 		//更新详情页
 		function create_detail(index)
 		{
@@ -268,7 +227,7 @@
 			'<div class="note-edit">'+
 				'<img src="img/change.png" alt="delete">'+
 			'</div>'+
-	    	'<header class="detail-title">'+item_title+'</header>'+
+	    	'<div class="detail-title">'+item_title+'</div>'+
 	    	'<div class="title-edit"><input type="text" value="'+item_title+'"></div>'+
 	    	'<div class="detail-time">更新于 '+item_time+'</div>'+
 	    	'<div class="detail-content">'+
@@ -286,7 +245,6 @@
 			$note_detail.find('.note-delete').on('click',function()
 			{
 				hide_detail();
-				render_note_list(); //编辑页关闭时刷新一次页面
 			})
 
 			$note_detail.find('.note-edit').on('click',function()
@@ -297,23 +255,61 @@
 
 			$note_detail.find('.star').on('click',function()
 			{
-				item.star=item.star?false:true;
-				$(this).find('img').attr('src', 'img/star'+(item.star?'ed':'')+'.png');
-			})
+				var data={};
+				data.star=note_list[index].star?false:true;
+				$(this).find('img').attr('src', 'img/star'+(data.star?'ed':'')+'.png');
+				change_note_list(index,data);
+			});
+
+			$note_detail.on('contextmenu',function(e)
+	            {
+	            	e.preventDefault();
+	            	$detail_menu.css({'left':e.pageX+5,'top':e.pageY+5}).show();
+	            }).on('click',function()
+	            {
+	            	$detail_menu.hide();
+	            	scroll_judgement();
+	            });
+	            $detail_menu.on('click', function(e) {
+	            	e.stopPropagation();
+	            	scroll_judgement();
+	            }).children('li').hover(function()
+	            {
+	            	$(this).find('.level2').show();
+	            },function()
+	            {
+	            	$(this).find('.level2').hide();
+	            });
+
+	            $('#fontsize li').click(function()
+	            	{
+	            		$('.inner-content').css('top', '0');  //避免拉到最后改小字体出现大片空白
+	            		$note_detail.css('font-size',$(this).data('size'));
+	            	});
+	            $('#fontcolor li').click(function()
+	            	{
+	            		$note_detail.css('color',$(this).data('color'));
+	            	});
+	            $('#bgcolor li').click(function()
+	            	{
+	            		$note_detail.css('background-color',$(this).data('bgcolor'));
+	            	});
 
 			$note_detail.find('form').on('submit',function(e)
 			{
 				e.preventDefault();
 				var data={};
 				oDate=new Date();
-				data.title=$note_detail.find('input').val()
+				data.title=$note_detail.find('input').val();
 				data.content=$note_detail.find('textarea').val();
+				if(data.title=="" || data.content=="")return;
 				data.time=(oDate.getMonth()+1)+"月"+oDate.getDate()+"日 "
 			              +oDate.getHours()+"时"+oDate.getMinutes()+"分";
 			    data.star=item.star;
 			    change_note_list(index,data) && hide_detail();
 			})
 		}
+
 		//详情页内编辑后更新数组
 		function change_note_list(index,data)
 		{
@@ -333,11 +329,40 @@
 				});
 			$mask.show();
 		};
-
 		//关闭详情页
 		function hide_detail()
 		{
 			$note_detail.hide('fast');
 			$mask.hide();
 		}
+
+		//删除数组元素并更新页面
+		function delete_note_list(index)
+		{
+			if(index===undefined || !note_list[index])
+				return;
+			note_list.splice(index,1);
+			update_note_list();
+		}
+
+
+    
+/*	$(document).on('contextmenu',function(e)
+	{
+		e.preventDefault();
+		$detail_menu.css({'left':e.pageX+5,'top':e.pageY+5}).show();
+	}).on('click',function()
+	{
+		$detail_menu.hide();
+	})
+	$detail_menu.on('click', function(e) {
+		e.stopPropagation();
+	}).children('li').hover(function()
+	{
+		$(this).find('.level2').show();
+	},function()
+	{
+		$(this).find('.level2').hide();
+	});*/
+
 	})();

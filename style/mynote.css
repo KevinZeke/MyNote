@@ -9,10 +9,14 @@
 	-moz-box-sizing:border-box;
 	-o-box-sizing:border-box;
 	box-sizing:border-box;
+	list-style: none;
 	word-wrap: break-word;
 	font-family: "黑体";
 }
-
+ul,li{
+	margin: 0;
+	padding: 0;
+}
 body{
 	min-height: 600px;
 	background: url(../img/bg.jpg) no-repeat #a59b9b;
@@ -161,7 +165,7 @@ button[type=submit]:hover{
 }
 
 .content-preview{
-	margin-top: 20px;
+	margin-top: 21px;
 	height: 56px;
 	font-size: .5em;
 	color: #C0A9FE;
@@ -169,7 +173,7 @@ button[type=submit]:hover{
 }
 .time{
 	position: absolute;
-	bottom: 5px;
+	bottom: 6px;
 	right: 10px;
 	font-size: 1em;
 	color: #B4B4B4;
@@ -355,6 +359,51 @@ button[type=submit]:hover{
 	cursor: pointer;
 }
 
+/* 详情页右键菜单 */
+.level2,
+.level1{
+	display: none;
+	position: absolute;
+	top: 100px;
+	left: 200px;
+	text-align: center;
+	background: #F5F1F8;
+	border-radius: 5px;
+	box-shadow: 1px 1px 3px 2px #CBBBBB;
+	z-index: 999;
+}
+.level1{
+	width: 150px;
+	height: 180px;
+	font-size: 20px;
+	line-height: 60px;
+}
+.level1 li{
+	border-radius: 3px;
+}
+.level1 li:hover{
+	background: #F79999;
+	cursor: pointer;
+}
+.level2{
+	display: none;
+	top: 0;
+	left: 150px;
+	width: 100px;
+	height: 120px;
+	line-height: 30px;
+	font-size: 18px;
+}
+.level2 input{
+	width: 90%;
+	background: #fff;
+}
+#fontcolor{
+	top: 60px;
+}
+#bgcolor{
+	top: 120px;
+}
 
 
 

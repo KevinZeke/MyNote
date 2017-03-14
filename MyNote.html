@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>MyNote</title>
+	<title></title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="http://cdn.bootcss.com/normalize/5.0.0/normalize.css">
 <link rel="stylesheet" href="style/mynote.css" type="text/css">
@@ -13,7 +13,7 @@
 <body>
 	<!-- 全局 -->
 	<div class="note-area">
-		<header style="font-size:3em">简易笔记MyNote</header>
+		<h1 style="font-size:3em">简易笔记</h1>
 		<!-- 新建笔记 -->
 		<div class="add-note">
 			<div class="add-move"></div>
@@ -36,7 +36,6 @@
 	    </div>
 		<!-- 新建笔记结束 -->
 		<div class="note-list">
-		<!-- 此部分由js生成 -->
 		<!--<div class="note-item">
 			 <div class="star">
 				<img src="img/star.png" alt="star">
@@ -60,22 +59,21 @@
 	    </div>-->
 	    </div>
 	    <div class="note-detail">
-	    	<!-- 此部分由js生成 -->
 	    	<!-- <form>
 	    	<div class="note-delete">
-				<img src="img/delete.png" alt="delete">
-			</div>
-			<div class="note-edit">
-				<img src="img/change.png" alt="delete">
-			</div>
-	    	<header class="detail-title">这个是标题</header>
+	    					<img src="img/delete.png" alt="delete">
+	    				</div>
+	    				<div class="note-edit">
+	    					<img src="img/change.png" alt="delete">
+	    				</div>
+	    	<div class="detail-title">这个是标题</div>
 	    	<div class="title-edit"><input type="text" value="这个是标题"></div>
 	    	<div class="detail-time">1970年3月11日</div>
 	    	<div class="detail-content">
 	    		<div class="inner-content">这个是正文</div>
 	    		<div class="scroll"><div class="inner-scroll" id="test"></div></div>
 	    	</div>
-
+	    	
 	    	<div class="content-edit"><textarea value="这个是正文"></textarea></div>
 	    	<button type="submit">提交</button>
 	    	<form> -->
@@ -83,6 +81,34 @@
         <!-- 遮罩 -->
         <div class="mask"></div>
         <!-- 遮罩结束 -->
+        <!-- 右键菜单 -->
+        <ul class="level1">
+		<li>字体大小
+			<ul class="level2" id="fontsize">
+				<li data-size="15px">小</li>
+		        <li data-size="18px">中</li>
+		        <li data-size="20px">大</li>
+		        <!-- <li><input type="text" placeholder="自定义"></li> -->
+		    </ul>
+	    </li>
+		<li>字体颜色
+			<ul class="level2" id="fontcolor">
+				<li data-color="#FF1493">红色</li>
+		        <li data-color="#228B22">绿色</li>
+		        <li data-color="#2F188A">蓝色</li>
+		       <!--  <li><input type="text" placeholder="自定义"></li> -->
+		    </ul>
+		</li>
+		<li>背景颜色
+			<ul class="level2" id="bgcolor">
+				<li data-bgcolor="#E45D5D">红色</li>
+		        <li data-bgcolor="#ADFF2F">绿色</li>
+		        <li data-bgcolor="#9193BC">蓝色</li>
+		        <!-- <li><input type="text" placeholder="自定义"></li> -->
+		    </ul>
+		</li>
+	</ul>
+        <!-- 菜单结束 -->
         <!-- 任务球 -->
         <div class="ball">
         	<img src="img/edit.png" alt="edit"><span class="ball-add">新建笔记</span>
