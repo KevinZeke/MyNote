@@ -10,7 +10,7 @@
 		    oDate,
 		    innerScroll,
 		    oHeight,
-		    re=/\n+/g,                         //实现textarea输出的内容实现换行。
+		    re=/\n+/g,                         //textarea输出的内容实现换行。
 		    $body=$('body'),
 		    $window=$(window),
 		    $ball=$('.ball'),
@@ -129,7 +129,7 @@
 			//让弹出框在窗口大小变化的时候自适应
 			$window.on('resize',function()
 			{
-				adjust_box_position($box);
+				adjust_box_position($box,0,20);
 			}).trigger('resize');
 
 			$mask.appendTo($body);
@@ -139,7 +139,7 @@
 		}
 
         //屏幕自适应函数
-		function adjust_box_position($box)
+		function adjust_box_position($box,Xshift,Yshift)  //shift偏移量
 			{
 				var window_width=$window.width(),
 				    window_height=$window.height(),
@@ -148,8 +148,8 @@
 				    pos_x,
 				    pos_y;
 
-				    pos_x=(window_width - box_width)/2;
-				    pos_y=(window_height - box_height)/2 - 20;
+				    pos_x=(window_width - box_width)/2 - Xshift;
+				    pos_y=(window_height - box_height)/2 - Yshift;
 
 				    $box.css({
 				    	left: pos_x,
@@ -213,7 +213,6 @@
 					toggle_add_note();
 					$input.val('');
 					$textarea.val('');
-
 					/*完成一个=动画添加效果*/
 					$new_note=$('.note-item:eq(0)');
 					oHeight=$new_note[0].offsetHeight;
@@ -231,6 +230,7 @@
         function add_note_list(data)
         {
         	note_list.push(data);
+        	now_page=1;//回到第一页
         	update_note_list();
         	return true;
         }
@@ -301,10 +301,11 @@
 	    	$pages='<div class="tab-page">'+
 	                        '<ul>'+
 	                        '</ul>'+
-                        '</div>'
+                        '</div>';
             $('body').append($pages);
             $tab_page=$('.tab-page ul');
             $tab_page.html('');
+            if(aLi<2) return;
             $tab_page.css({width:aLi*35,height:30});
             for(var i=0;i<aLi;i++)
             {
@@ -399,6 +400,7 @@
 		//更新详情页
 		function create_detail(index)
 		{
+			if(index==undefined || !note_list[index])return;
 			var item=note_list[index];
 			var item_title=item.title;
 			var item_content=item.content;
