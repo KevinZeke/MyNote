@@ -6,6 +6,7 @@
 		    note_item,                        //包含笔记信息的对象
 		    note_items,                       //包含页面上的文章列表
 		    star=[],                          //星标数组添加收藏
+		    now_page=1,                       //用来储存当前页数。初始为1
 		    oDate,
 		    innerScroll,
 		    oHeight,
@@ -18,6 +19,8 @@
 		    $note_list_area=$('.note-list'),
 		    $note_detail=$('.note-detail'),
 		    $new_note,
+		    $tab_page,
+		    $pages,
 		    $delete_button,
 		    $detail_button,
 		    $star_button,
@@ -154,11 +157,6 @@
 				    });
 			};
 
-
-
-
-
-
 		//给新建页添加拖拽
 		new Drag($add_note[0],add_move,true,true);
 		function init()
@@ -244,23 +242,40 @@
         	render_note_list();
         }
 
-		//根据文章数组数据刷新文章
-		function render_note_list(isStar)
+		//旧版本的render函数。先注释暂时留作参考
+	/*	function render_note_list()
 		{
 			$note_list_area.html('');
-			star=[];
-			for(var i=0;i<note_list.length;i++)
+			var note_length=note_list.length;
+			var count=note_length>2?(note_length-3):0;
+			for(var i=note_length-1;i>=count;i--)
 			{
-				if(note_list[i].star)
-				{
-					star.push(note_list[i]);
-				}
 				var item=create_new_note(note_list[i],i);
-				item.prependTo('.note-list');
+				item.appendTo('.note-list');
 			}
 			listen_all();
+			tab_pager(note_list);
+			return true;
+		}*/
+
+		function render_note_list(num)                             
+		{
+			if(!num)num=now_page;
+			$note_list_area.html('');
+			var note_length=note_list.length;
+			var begin=note_length-(1+(num-1)*3);
+			var end=(begin-2)<0?0:(begin-2);
+			for(var i=begin;i>=end;i--)
+			{
+				var item=create_new_note(note_list[i],i);
+				item.appendTo('.note-list');
+			}
+			listen_all();
+			tab_pager(note_list);
 		}
 
+        
+        //按钮事件集中
 		function listen_all()
 		{
 			note_items=$('.note-item');
@@ -272,10 +287,35 @@
 			listen_star();
 			note_items.on('dblclick',function()
 			{
-				var index=note_list.length-$(this).data('index')-1;
-				$detail_button.eq(index).trigger('click');
+				//和详情按钮的函数较为重复，待合并
+				create_detail($(this).data('index'));
+				show_detail();
+				scroll_judgement();
 			})
 		}
+        
+        //计算并添加分页
+		function tab_pager(arr)
+	    {
+	    	var aLi=Math.ceil(arr.length/3);
+	    	$pages='<div class="tab-page">'+
+	                        '<ul>'+
+	                        '</ul>'+
+                        '</div>'
+            $('body').append($pages);
+            $tab_page=$('.tab-page ul');
+            $tab_page.html('');
+            $tab_page.css({width:aLi*35,height:30});
+            for(var i=0;i<aLi;i++)
+            {
+            	$('<li>'+(i+1)+'</li>').appendTo($tab_page);
+            }
+            $tab_page.find('li').on('click',function()
+            {
+            	now_page=this.innerHTML;
+            	render_note_list();
+            })
+	    }
 
 		//创建一个新文章页
 		function create_new_note(data,i)

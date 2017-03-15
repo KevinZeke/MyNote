@@ -143,7 +143,7 @@ button[type=submit]:hover{
 }
 .note-item:hover{
 	background: rgba(254,249,249,1);
-	box-shadow: 3px 3px 3px 3px #ccc;
+	box-shadow: 3px 3px 3px 3px #A19595;
 }
 
 .avatar{
@@ -411,4 +411,26 @@ button[type=submit]:hover{
 }
 
 
+.tab-page{
+	position: absolute;
+	top: 10px;
+	left: 500px;
+	overflow: hidden;
+}
+.tab-page li{
+	float: left;
+	margin-right: 5px;
+	width: 30px;
+	height: 30px;
+	background: #6155A7;
+	text-align: center;
+	border-radius: 15px;
+	line-height: 30px;
+	color: #fff;
+	font-size: 22px;
+	cursor: pointer;
+}
 
+.tab-page li:hover{
+	background: #D89393;
+}
