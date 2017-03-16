@@ -127,10 +127,11 @@
 			}
 
 			//让弹出框在窗口大小变化的时候自适应
-			$window.on('resize',function()
+			$window.on('resize',function ()
 			{
-				adjust_box_position($box,0,20);
-			}).trigger('resize');
+				adjust_box_position({box:$box,x:0,y:20});
+			});
+			adjust_box_position({box:$box,x:0,y:20});
 
 			$mask.appendTo($body);
 			$box.appendTo($body);
@@ -139,26 +140,39 @@
 		}
 
         //屏幕自适应函数
-		function adjust_box_position($box,Xshift,Yshift)  //shift偏移量
+		function adjust_box_position()
 			{
+				//{box:jQ对象,x:Y轴距正中偏移,y:Y轴距正中偏移}
 				var window_width=$window.width(),
 				    window_height=$window.height(),
-				    box_width=$box.width(),
-				    box_height=$box.height(),
+				    box_width,
+				    box_height,
 				    pos_x,
 				    pos_y;
+				    for(var i=0;i<arguments.length;i++)
+				    {
+				        box_width=arguments[i].box.width(),
+				        box_height=arguments[i].box.height(),
+				        pos_x=(window_width - box_width)/2 - arguments[i].x;
+				        pos_y=(window_height - box_height)/2 - arguments[i].y;
 
-				    pos_x=(window_width - box_width)/2 - Xshift;
-				    pos_y=(window_height - box_height)/2 - Yshift;
-
-				    $box.css({
-				    	left: pos_x,
-				    	top:pos_y
-				    });
+				        arguments[i].box.css({
+				        	left: pos_x,
+				        	top:pos_y
+				        });
+				    }
 			};
+
+
+		//避免调整窗口大小后的错位问题
+	    	$window.on('resize',function()
+			{
+				adjust_box_position({box:$note_detail,x:0,y:20},{box:$add_note,x:0,y:50});
+			});
 
 		//给新建页添加拖拽
 		new Drag($add_note[0],add_move,true,true);
+
 		function init()
 		{
 			//store.clear();
@@ -307,15 +321,26 @@
             $tab_page.html('');
             if(aLi<2) return;
             $tab_page.css({width:aLi*35,height:30});
+            var present;
             for(var i=0;i<aLi;i++)
             {
-            	$('<li>'+(i+1)+'</li>').appendTo($tab_page);
+            	//给当前的页码增加不同的样式
+            	if(i==now_page-1)
+            	{
+            		present=' class="active"';
+            	}
+            	else
+            	{
+            		present='';
+            	}
+            	$('<li'+present+'>'+(i+1)+'</li>').appendTo($tab_page);
             }
+
             $tab_page.find('li').on('click',function()
             {
             	now_page=this.innerHTML;
             	render_note_list();
-            })
+            });
 	    }
 
 		//创建一个新文章页
@@ -430,6 +455,8 @@
 	    	var innerScroll=$('.inner-scroll')[0];
 	    	new ScrollDrag(innerScroll,innerScroll,false,true,$('.inner-content')[0]);
 	    	new Drag($note_detail[0],$('.detail-title')[0],true,true);
+	    	adjust_box_position({box:$note_detail,x:0,y:20});
+	    	
 			$note_detail.find('.note-delete').on('click',function()
 			{
 				hide_detail();

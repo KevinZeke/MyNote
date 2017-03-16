@@ -273,8 +273,6 @@ button[type=submit]:hover{
 .note-detail{
 	display: none;
 	position: fixed;
-	top: 20px;
-	left: 300px;
 	width: 800px;
 	padding: 20px;
 	margin: 0 auto;
@@ -431,6 +429,7 @@ button[type=submit]:hover{
 	cursor: pointer;
 }
 
+.tab-page li.active,
 .tab-page li:hover{
 	background: #D89393;
 }
