@@ -1,4 +1,4 @@
-
+//toRoll 滚动条滚动区域
 function ScrollDrag(scroll,downArea,X,Y,toRoll) 
 {
 	this.toObj=toRoll;
@@ -23,7 +23,7 @@ ScrollDrag.prototype.fnMove=function (e,X,Y)
 	iL=iL<0?0:iL;
 	iL=iL>(parentWidth - oWidth)?(parentWidth - oWidth):iT;
 	iT=iT<0?0:iT;
-	iT=iT>(parentHeight - oHeight)?(parentHeight-oHeight):iT;
+	iT=iT>(parentHeight - oHeight)?(parentHeight - oHeight):iT;
 	Y && (this.obj.style.top=iT + 'px',this.scale = this.obj.offsetTop/(parentHeight - oHeight));
 	X && (this.obj.style.left=iL + 'px',this.scale = this.obj.offsetLeft/(parentWidth - oWidth));
 

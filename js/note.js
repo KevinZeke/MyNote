@@ -10,7 +10,7 @@
 		    oDate,
 		    innerScroll,
 		    oHeight,
-		    re=/\n+/g,                         //textarea输出的内容实现换行。
+		    re=/\n+/g,                         //让textarea输出的内容实现换行。
 		    $body=$('body'),
 		    $window=$(window),
 		    $ball=$('.ball'),
@@ -29,13 +29,10 @@
 
 		init();
 
-        //自定义的警告框(考虑到复用,连同遮罩不直接添加在html中)
+        //自定义的警告框-异步(考虑到复用,连同遮罩不直接添加在html中)
 		function pop(arg)
 		{
-			if(!arg)
-			{
-				console.error('pop title is required')
-			};
+			if(!arg)return;
 
 			var conf={},
 			    dfd,
@@ -142,7 +139,7 @@
         //屏幕自适应函数
 		function adjust_box_position()
 			{
-				//{box:jQ对象,x:Y轴距正中偏移,y:Y轴距正中偏移}
+				//参数{box:jQ对象,x:Y轴距正中偏移,y:Y轴距正中偏移}
 				var window_width=$window.width(),
 				    window_height=$window.height(),
 				    box_width,
@@ -192,7 +189,7 @@
             	toggle_add_note();
             }).end().find('.ball-star').on('click',function()
             {
-            	console.log('做崩了目前推到重来');
+            	console.log('做崩了目前推倒重来');
             });
 
             //控制遮罩和新建笔记页面

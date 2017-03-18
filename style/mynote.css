@@ -96,10 +96,10 @@ input
 	
 }
 
-/*.add-note*/ input:focus,
-/*.add-note*/ input:hover,
-/*.add-note*/ textarea:focus,
-/*.add-note*/ textarea:hover{
+input:focus,
+input:hover,
+textarea:focus,
+textarea:hover{
 	background: #fff;
 	box-shadow:1px 1px 5px 3px #FEA8B0;
 }
