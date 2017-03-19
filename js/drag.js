@@ -1,4 +1,5 @@
-﻿function Drag(tag,downArea,X,Y)
+//tag-拖拽目标 downarea-可选中区域 X-x轴锁定 Y-y轴锁定
+function Drag(tag,downArea,X,Y)
 {
 	var _this=this;
 	this.obj=tag;

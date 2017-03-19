@@ -88,7 +88,6 @@
 			});
 
 			$content=$box.find('.pop-content');
-
 			$confirm=$content.find('button.confirm');
 			$cancel=$content.find('button.cancel');
 
@@ -117,6 +116,7 @@
 				}
 			},50)
 
+			//移除弹窗
 			function dismiss_pop()
 			{
 				$mask.remove();
@@ -189,7 +189,7 @@
             	toggle_add_note();
             }).end().find('.ball-star').on('click',function()
             {
-            	console.log('做崩了目前推倒重来');
+            	pop('功能重做中');
             });
 
             //控制遮罩和新建笔记页面
@@ -254,7 +254,7 @@
         }
 
 		//旧版本的render函数。先注释暂时留作参考
-	/*	function render_note_list()
+		/*function render_note_list()
 		{
 			$note_list_area.html('');
 			var note_length=note_list.length;
@@ -282,7 +282,7 @@
 				item.appendTo('.note-list');
 			}
 			listen_all();
-			tab_pager(note_list);
+			tab_pager(note_list,3);
 		}
 
         
@@ -306,9 +306,9 @@
 		}
         
         //计算并添加分页
-		function tab_pager(arr)
+		function tab_pager(arr,list)
 	    {
-	    	var aLi=Math.ceil(arr.length/3);
+	    	var aLi=Math.ceil(arr.length/list);
 	    	$pages='<div class="tab-page">'+
 	                        '<ul>'+
 	                        '</ul>'+
@@ -403,7 +403,7 @@
 			{
 				var data={};
 				var $index=$(this).parent().data('index');
-				data.star=note_list[$index].star?false:true;
+				data.star=!note_list[$index].star;
 				change_note_list($index,data);
 			})
 		}
@@ -468,7 +468,7 @@
 			$note_detail.find('.star').on('click',function()
 			{
 				var data={};
-				data.star=note_list[index].star?false:true;
+				data.star=!note_list[index].star;
 				$(this).find('img').attr('src', 'img/star'+(data.star?'ed':'')+'.png');
 				change_note_list(index,data);
 			});
